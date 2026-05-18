@@ -8,13 +8,14 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/PriyanshuSingh21july2021/DEVOPS_CHAT_APPLICATION_DEPLOY.git'
+                git branch: 'main',
+                url: 'https://github.com/PriyanshuSingh21july2021/DEVOPS_CHAT_APPLICATION_DEPLOY.git'
             }
         }
 
-        stage('List Files (DEBUG)') {
+        stage('List Project Structure (DEBUG)') {
             steps {
                 sh 'ls -R'
             }
@@ -28,15 +29,45 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                sh 'docker build -t $FRONTEND_IMAGE ./frontend || echo "Frontend path missing"'
+                // IMPORTANT: your frontend is inside /public/src not /client or /frontend
+                sh 'docker build -t $FRONTEND_IMAGE ./public'
             }
         }
 
-        stage('Deploy') {
+        stage('Stop Old Containers') {
             steps {
                 sh 'docker compose down || true'
+            }
+        }
+
+        stage('Deploy Containers') {
+            steps {
                 sh 'docker compose up -d --build'
             }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    echo "Checking Backend..."
+                    curl -f http://localhost:5000/ping || true
+
+                    echo "Checking Frontend..."
+                    curl -I http://localhost:3000 || true
+
+                    echo "Containers Status..."
+                    docker ps
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "🚀 Pipeline Success - App Deployed"
+        }
+        failure {
+            echo "❌ Pipeline Failed - Check Logs"
         }
     }
 }
