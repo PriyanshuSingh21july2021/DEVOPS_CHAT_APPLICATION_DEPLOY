@@ -81,3 +81,79 @@ Docker Compose
 MongoDB
 Node.js + React
 
+
+Perfect 👍 you want ALL localhost links for your monitoring stack (Prometheus + Grafana + exporters) in one place.
+
+I’ll give you a clean cheat sheet 👇
+
+🟢 🚀 LOCALHOST LINKS (YOUR COMPLETE SETUP)
+🔹 1. Prometheus UI (MAIN DASHBOARD)
+http://localhost:9090
+🔍 Targets page (VERY IMPORTANT)
+http://localhost:9090/targets
+🔍 Query page
+http://localhost:9090/graph
+🔹 2. Grafana UI (DASHBOARD BUILDER)
+http://localhost:3000
+
+Default login:
+
+username: admin
+password: admin
+🔹 3. Node Exporter (CPU / RAM / DISK metrics)
+http://localhost:9100/metrics
+🔹 4. cAdvisor (Docker container metrics)
+http://localhost:8080
+
+Metrics endpoint:
+
+http://localhost:8080/metrics
+🔹 5. Alertmanager (alerts system)
+http://localhost:9093
+🧠 HOW EVERYTHING CONNECTS
+node-exporter → :9100
+cadvisor      → :8080
+prometheus    → :9090
+grafana       → :3000
+alertmanager  → :9093
+🔥 YOUR DOCKER NETWORK (FROM YOUR SETUP)
+
+You already have:
+
+prometheus:9090
+grafana:3000
+node-exporter:9100
+cadvisor:8080
+alertmanager:9093
+
+Inside Docker network they talk like:
+
+http://prometheus:9090
+http://node-exporter:9100
+
+But browser ALWAYS uses:
+
+http://localhost:PORT
+🚨 MOST IMPORTANT RULE
+Where	URL
+Browser	localhost
+Docker internal	service name
+🟢 QUICK CHECK LIST (YOU CAN TEST NOW)
+
+Open in browser:
+
+✔ http://localhost:9090
+✔ http://localhost:9090/targets
+✔ http://localhost:3000
+✔ http://localhost:9100/metrics
+✔ http://localhost:8080
+👍 IF SOMETHING NOT WORKING
+
+Tell me:
+
+Prometheus not opening?
+Grafana no data?
+node metrics missing?
+
+I will fix your whole stack step-by-step in 5 minutes 🚀
+
