@@ -1,48 +1,53 @@
 pipeline {
     agent any
 
+    environment {
+        BACKEND_IMAGE = "chat-backend"
+        FRONTEND_IMAGE = "chat-frontend"
+    }
+
     stages {
 
-        stage('Checkout') {
+        stage('Cleanup Old Containers') {
+            steps {
+                sh '''
+                    docker compose down -v || true
+                    docker rm -f $(docker ps -aq) || true
+                    docker system prune -f || true
+                '''
+            }
+        }
+
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
                 url: 'https://github.com/PriyanshuSingh21july2021/DEVOPS_CHAT_APPLICATION_DEPLOY.git'
             }
         }
 
-        stage('Clean Old Containers') {
+        stage('Build Backend Image') {
             steps {
-                sh '''
-                    docker compose down || true
-                    docker rm -f $(docker ps -aq) || true
-                '''
+                sh 'docker build -t $BACKEND_IMAGE ./server'
             }
         }
 
-        stage('Build Backend') {
+        stage('Build Frontend Image') {
             steps {
-                sh 'docker build -t chat-backend ./server'
+                sh 'docker build -t $FRONTEND_IMAGE ./public'
             }
         }
 
-        stage('Build Frontend') {
-            steps {
-                sh 'docker build -t chat-frontend ./public'
-            }
-        }
-
-        stage('Deploy') {
+        stage('Deploy with Docker Compose') {
             steps {
                 sh 'docker compose up -d --build'
             }
         }
 
-        stage('Verify') {
+        stage('Verify Deployment') {
             steps {
                 sh '''
-                    curl -f http://localhost:5000/ping || true
-                    curl -I http://localhost:3000 || true
-                    docker ps
+                    sleep 10
+                    curl -f http://localhost:5000/ping || exit 1
                 '''
             }
         }
@@ -50,10 +55,10 @@ pipeline {
 
     post {
         success {
-            echo "DEPLOY SUCCESS"
+            echo "✅ Pipeline SUCCESS - App deployed"
         }
         failure {
-            echo "DEPLOY FAILED - CHECK PORTS"
+            echo "❌ Pipeline FAILED - check logs"
         }
     }
 }
