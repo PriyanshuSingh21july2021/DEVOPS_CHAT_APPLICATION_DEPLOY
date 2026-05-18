@@ -1,61 +1,47 @@
 pipeline {
     agent any
 
-    environment {
-        BACKEND_IMAGE = "chat-backend"
-        FRONTEND_IMAGE = "chat-frontend"
-    }
-
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 git branch: 'main',
                 url: 'https://github.com/PriyanshuSingh21july2021/DEVOPS_CHAT_APPLICATION_DEPLOY.git'
             }
         }
 
-        stage('List Project Structure (DEBUG)') {
+        stage('Clean Old Containers') {
             steps {
-                sh 'ls -R'
+                sh '''
+                    docker compose down || true
+                    docker rm -f $(docker ps -aq) || true
+                '''
             }
         }
 
         stage('Build Backend') {
             steps {
-                sh 'docker build -t $BACKEND_IMAGE ./server'
+                sh 'docker build -t chat-backend ./server'
             }
         }
 
         stage('Build Frontend') {
             steps {
-                // IMPORTANT: your frontend is inside /public/src not /client or /frontend
-                sh 'docker build -t $FRONTEND_IMAGE ./public'
+                sh 'docker build -t chat-frontend ./public'
             }
         }
 
-        stage('Stop Old Containers') {
-            steps {
-                sh 'docker compose down || true'
-            }
-        }
-
-        stage('Deploy Containers') {
+        stage('Deploy') {
             steps {
                 sh 'docker compose up -d --build'
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Verify') {
             steps {
                 sh '''
-                    echo "Checking Backend..."
                     curl -f http://localhost:5000/ping || true
-
-                    echo "Checking Frontend..."
                     curl -I http://localhost:3000 || true
-
-                    echo "Containers Status..."
                     docker ps
                 '''
             }
@@ -64,10 +50,10 @@ pipeline {
 
     post {
         success {
-            echo "🚀 Pipeline Success - App Deployed"
+            echo "DEPLOY SUCCESS"
         }
         failure {
-            echo "❌ Pipeline Failed - Check Logs"
+            echo "DEPLOY FAILED - CHECK PORTS"
         }
     }
 }
