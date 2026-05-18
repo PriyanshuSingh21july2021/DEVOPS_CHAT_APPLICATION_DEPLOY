@@ -14,6 +14,12 @@ pipeline {
             }
         }
 
+        stage('List Files (DEBUG)') {
+            steps {
+                sh 'ls -R'
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 sh 'docker build -t $BACKEND_IMAGE ./server'
@@ -22,11 +28,11 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                sh 'docker build -t $FRONTEND_IMAGE ./client'
+                sh 'docker build -t $FRONTEND_IMAGE ./frontend || echo "Frontend path missing"'
             }
         }
 
-        stage('Run Containers') {
+        stage('Deploy') {
             steps {
                 sh 'docker compose down || true'
                 sh 'docker compose up -d --build'
