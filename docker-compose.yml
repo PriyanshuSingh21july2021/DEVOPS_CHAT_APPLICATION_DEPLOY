@@ -1,37 +1,37 @@
-version: '3.8'
-
-services:
-  frontend:
-    build: ./public
-    ports:
-      - "3001:3000"
-
-  backend:
-    build: ./server
-    ports:
-      - "5001:5000"
-
-  mongo:
-    image: mongo
-    ports:
-      - "27018:27017"
-
-
-
 # version: '3.8'
 
 # services:
 #   frontend:
 #     build: ./public
 #     ports:
-#       - "3000:3000"
+#       - "3001:3000"
 
 #   backend:
 #     build: ./server
 #     ports:
-#       - "5000:5000"
+#       - "5001:5000"
 
 #   mongo:
 #     image: mongo
 #     ports:
-#       - "27017:27017"
+#       - "27018:27017"
+
+
+
+version: '3.8'
+
+services:
+  frontend:
+    build: ./public
+    ports:
+      - "3000:3000"
+
+  backend:
+    build: ./server
+    ports:
+      - "5000:5000"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
