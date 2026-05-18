@@ -65,4 +65,4 @@ after the build is complete run the containers using the following command
 ```shell
 docker compose up
 ```
-now open localhost:3000 in your browser.
+now open localhost:3000 in your browser.# DEVOPS_CHAT_APPLICATION_DEPLOY
