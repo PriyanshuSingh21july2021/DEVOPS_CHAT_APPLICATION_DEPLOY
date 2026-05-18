@@ -1,0 +1,83 @@
+🚀 MERN Docker Project Quick Commands (CI/CD Ready)🚀 MERN Docker Project Quick Commands (CI/CD Ready)
+
+Project 1: MERN Stack CI/CD Pipeline
+Tech Stack: Linux + Jenkins + Docker + NGINX + MongoDB
+CI/CD Flow: GitHub Webhook -> Jenkins Pipeline -> Docker Build -> DockerHub Push -> Auto Deploy
+
+
+
+🌐 ACCESS LINKS (FINAL)
+Service	URL
+Frontend	http://localhost:3000
+Backend API	http://localhost:5000/ping
+MongoDB	mongodb://localhost:27017
+
+📦 CHECK RUNNING CONTAINERS
+docker ps
+🧪 TEST FRONTEND + BACKEND
+docker ps && curl http://localhost:5000/ping && curl -I http://localhost:3000
+
+📊 VIEW LOGS
+Backend Logs
+docker logs -f chat-app-react-nodejs-backend-1
+Frontend Logs
+docker logs -f chat-app-react-nodejs-frontend-1
+MongoDB Logs
+docker logs -f chat-app-react-nodejs-mongo-1
+
+🔁 PROJECT CONTROL COMMANDS
+▶ Start Project
+docker compose up -d
+
+🛑 Stop Project
+docker compose down
+
+🔄 Restart Project
+docker compose restart
+♻ Rebuild + Start Project
+docker compose up --build -d
+🧹 CLEANUP COMMANDS
+Remove All Containers
+docker rm -f $(docker ps -aq)
+Remove All Images
+docker rmi -f $(docker images -q)
+Full System Cleanup
+docker system prune -af --volumes
+
+🧪 BACKEND HEALTH CHECK
+curl http://localhost:5000/ping
+Expected Output:
+{"msg":"Ping Successful"}
+
+🌐 FRONTEND TROUBLESHOOTING
+
+If frontend not opening:
+
+Press Ctrl + Shift + R
+OR open in Incognito Mode
+OR restart containers:
+docker compose restart
+
+📊 PROJECT STATUS
+Frontend Port → 3000
+Backend Port → 5000
+MongoDB Port → 27017
+
+🏁 CURRENT PROJECT STATUS
+✔ Docker Working
+✔ MongoDB Connected
+✔ Backend Running
+✔ Frontend Running
+✔ API Responding Properly
+✔ CI/CD Pipeline Ready
+
+🚀 FINAL NOTE
+
+This project is fully containerized and CI/CD ready using:
+
+GitHub
+Jenkins Pipeline
+Docker Compose
+MongoDB
+Node.js + React
+
